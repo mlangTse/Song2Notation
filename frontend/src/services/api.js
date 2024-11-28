@@ -1,18 +1,14 @@
-import axios from 'axios';
+import axios from "axios";
 
-export const processAudio = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-        const response = await axios.post("http://localhost:5000/process-audio", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
-        return response.data;
-    } catch (error) {
-        console.error("Error processing audio file:", error);
-        throw error;
-    }
+export const processAudio = async (formData, setUploadProgress) => {
+  const response = await axios.post("http://54.252.148.37/process-audio", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    onUploadProgress: (progressEvent) => {
+      const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+      setUploadProgress(percentCompleted);
+    },
+  });
+  return response.data;
 };
